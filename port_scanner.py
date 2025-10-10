@@ -128,7 +128,7 @@ def cli():
                 no_text = True
 
 
-        print(f"Host: {host}, Start: {start}, End: {end}, No Text: {no_text}")
+        print(f"Host: {host}, Start: {start}, End: {end}, Show Text: {not no_text}")
         cmd = input("Scan ports with these configurations? (Y/N): ").lower()
         while cmd not in YES and cmd not in NO:
             print("Please enter (y)es or (n)o.")
@@ -144,9 +144,9 @@ def cli():
             print("Starting scan...")
             go_ahead = True
 
-    start_time = time.time()
+    start_time = time.perf_counter()
     open_count, closed_count, filtered_count, total_count = scan_ports(start, end, host, no_text)
-    end_time = time.time()
+    end_time = time.perf_counter()
     elapsed_time = end_time - start_time
     print("Scanning complete!")
     print(f"Number of open ports: {open_count}")

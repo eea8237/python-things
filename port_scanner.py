@@ -1,3 +1,7 @@
+"""
+Port scanner that prints info about scanned ports.
+Author: Esther Arimoro
+"""
 import socket
 import time
 

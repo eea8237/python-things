@@ -1,5 +1,5 @@
 """
-Port scanner that prints info about scanned ports.
+Port scanner that prints info about scanning process.
 Author: Esther Arimoro
 """
 import socket
@@ -13,21 +13,10 @@ DEFAULT_END = 500
 MIN_PORT = 1
 MAX_PORT = 65535
 
-# port types
-OPEN = "open"
-CLOSED = "closed"
-FILTERED = "filtered"
-
 # commands
-LOCAL = {"local", "l"}
-REMOTE = {"remote", "r"}
+LOCAL = {"localhost", "local host", "local", "l"}
+REMOTE = {"remote host", "remote", "r"}
 QUIT = {"quit", "q"}
-
-OPEN_CMDS = {"open", "o"}
-CLOSED_CMDS = {"closed", "c"}
-FILTERED_CMDS = {"filtered", "f"}
-ALL_CMDS = {"all", "a"}
-
 YES = {"yes", "y"}
 NO = {"no", "n"}
 
@@ -157,7 +146,7 @@ def cli():
     print(f"Number of closed ports: {closed_count}")
     print(f"Number of filtered ports: {filtered_count}")
     print(f"Total number of ports scanned: {total_count}")
-    print(f"Time to scan: {elapsed_time} s")
+    print(f"Elapsed time: {elapsed_time} s")
 
 
 def main():

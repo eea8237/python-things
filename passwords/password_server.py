@@ -5,9 +5,12 @@ import bcrypt
 
 from password_client import *
 
-__LOGINS_FILE = "C:\\Users\\r0wl3t\\Desktop\\csec projects\\python\\passwords\\logins.txt"
+#__LOGINS_FILE = "C:\\Users\\r0wl3t\\Desktop\\csec projects\\python\\passwords\\logins.txt"
+__LOGINS_FILE = ".\\passwords\\logins.txt"
 
-
+"""
+the most secure password server of all time
+"""
 def handle(client_sock):
     quit = False
     while not quit:
@@ -15,15 +18,23 @@ def handle(client_sock):
         mode = client_sock.recv(BUFFER_SIZE).decode()
         print(f"Selected mode: {mode}")
 
+        if mode == QUIT:
+            quit = True
+            client_sock.send("Closing connection. Goodbye!".encode())
+            print("Quitting...")
+            break
+
         # recieve username and password
         username = client_sock.recv(BUFFER_SIZE).decode()
         password = client_sock.recv(BUFFER_SIZE).decode()
             
-        if username.upper() == "QUIT" or password.upper() == "QUIT":
+        if username.upper() == QUIT or password.upper() == QUIT:
             quit = True
-            continue
+            client_sock.send("Closing connection. Goodbye!".encode())
+            break
 
         msg = "" # message to be sent
+        found = False
         # store username and password if this is a new login
         if mode == CREATE_NEW:
             print("opening file...")
@@ -39,11 +50,12 @@ def handle(client_sock):
                         msg = f"{username} already in logins. New username was not saved."
                         exists = True
                 if not exists:
-                    file.write(f"{username},")
-                    password = password.encode()
-                    salt = bcrypt.gensalt()
-                    hash = bcrypt.hashpw(password, salt)
-                    file.write(f"{hash}\n")
+                    # file.write(f"{username},")
+                    # password = password.encode()
+                    # salt = bcrypt.gensalt()
+                    # hash = bcrypt.hashpw(password, salt)
+                    # file.write(f"{hash}\n")
+                    file.write(f"{username},{password}\n")
                     msg = "Password and username stored."
         
         # if the login exists, search through the file for the login and compare the entered password
@@ -54,13 +66,16 @@ def handle(client_sock):
                     if line[0] == username:
                         if len(line) < 2: print("what")
                         else:
-                            if bcrypt.checkpw(password.encode(), line[1]):
+                            if (password == line[1]):
+                            # if bcrypt.checkpw(password.encode(), line[1]):
                                 msg = f"Login successful. Welcome, {username}."
                             else:
                                 msg = f"Login unsuccessful..."
+                            found = True
+                            break
                 
                 # if we get through the file without finding the username, it hasn't been stored
-                msg = f"Username {username} not found."
+                if not found: msg = f"Username {username} not found."
                 
         print(msg)
         client_sock.send(msg.encode())
@@ -76,13 +91,14 @@ def main():
 
     server_sock.listen(5)
 
+    print("Waiting...")
     while True:
-        print("Waiting...")
         client_sock, addr = server_sock.accept()
         print("Got connection from", addr)
         
         thread = threading.Thread(target=handle, args=(client_sock,))
         thread.start()
+        print("Waiting...")
 
 if __name__ == "__main__":
     main()

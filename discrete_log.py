@@ -3,7 +3,7 @@ Class for solving the discrete log problem.\n
 Author: Esther Arimoro
 """
 import math
-def brute_force_discrete_log(a, b, p):
+def brute_force(a, b, p):
     """
     solve for x in the equation a^x = b mod p using brute force
     """
@@ -14,13 +14,24 @@ def brute_force_discrete_log(a, b, p):
             solution = x
             break
     return solution
+
+def brute_force_all(a, b, p):
+    """
+    get all possible solutions for x the equation a^x = b mod p using brute force
+    """
+    solutions = []
+    for x in range(p):
+        answer = pow(a, x, p)
+        if answer == b:
+            solutions.append(x)
+    return solutions
         
 def main():
     # a.
     a = 2
     b = 162
     p = 173
-    x = brute_force_discrete_log(a, b, p)
+    x = brute_force(a, b, p)
     print(f"{a}^x = {b} mod {p}")
     print(f"x={x}")
     
@@ -28,7 +39,7 @@ def main():
     a = 7
     b = 6593
     p = 13649
-    x = brute_force_discrete_log(a, b, p)
+    x = brute_force(a, b, p)
     print(f"{a}^x = {b} mod {p}")
     print(f"x={x}")
     
@@ -36,7 +47,7 @@ def main():
     a = 1062
     b = 4134766
     p = 24691141
-    x = brute_force_discrete_log(a, b, p)
+    x = brute_force(a, b, p)
     print(f"{a}^x = {b} mod {p}")
     print(f"x={x}")
 
